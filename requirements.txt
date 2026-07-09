@@ -1,0 +1,11 @@
+# Dependencias de runtime (alternativa ao Poetry, usada no Docker).
+# Instalacao: pip install -r requirements.txt
+numpy>=1.26,<2.0
+pandas>=2.2,<3.0
+folium>=0.16,<1.0
+streamlit>=1.36,<2.0
+streamlit-folium>=0.21,<1.0
+plotly>=5.22,<6.0
+openai>=1.35,<2.0
+google-genai>=1.0,<2.0
+python-dotenv>=1.0,<2.0

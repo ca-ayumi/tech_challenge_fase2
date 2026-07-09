@@ -1,0 +1,16 @@
+# Copie para terraform.tfvars e ajuste os valores.
+# cp terraform.tfvars.example terraform.tfvars
+
+regiao         = "us-east-1"
+nome_projeto   = "rota-medica"
+
+# LLM: use Gemini (gratuito) ou OpenAI (pago). Preencha apenas a que for usar.
+llm_provider   = "gemini"
+gemini_api_key = "AIza...suachave..."
+gemini_model   = "gemini-2.0-flash"
+openai_api_key = ""
+openai_model   = "gpt-4o-mini"
+
+cpu            = "1024"
+memoria        = "2048"
+tag_imagem     = "latest"
