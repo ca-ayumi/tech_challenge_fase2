@@ -1,4 +1,3 @@
-"""Interface de linha de comando para demonstracao rapida sem interface grafica."""
 from __future__ import annotations
 
 import argparse

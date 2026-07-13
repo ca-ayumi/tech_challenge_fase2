@@ -36,6 +36,5 @@ def test_selecao_torneio_retorna_melhor():
     rng = random.Random(3)
     pop = [[0], [1], [2], [3]]
     custos = [10.0, 1.0, 5.0, 8.0]
-    # Torneio grande o suficiente para cobrir todos -> deve escolher custo minimo
     escolhido = ops.selecao_torneio(pop, custos, k=4, rng=rng)
     assert escolhido == [1]

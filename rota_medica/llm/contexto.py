@@ -1,11 +1,9 @@
-"""Serializacao de uma solucao de roteamento em contexto textual para a LLM."""
 from __future__ import annotations
 
 from ..dominio import ProblemaRoteamento, Solucao
 
 
 def solucao_para_dict(solucao: Solucao, problema: ProblemaRoteamento) -> dict:
-    """Converte a solucao em um dicionario compacto e legivel para a LLM."""
     rotas = []
     for i, rota in enumerate(solucao.rotas_utilizadas, start=1):
         paradas = []
@@ -56,7 +54,6 @@ def solucao_para_dict(solucao: Solucao, problema: ProblemaRoteamento) -> dict:
 
 
 def solucao_para_texto(solucao: Solucao, problema: ProblemaRoteamento) -> str:
-    """Versao textual enxuta usada em prompts (mais barata em tokens)."""
     linhas = [f"Deposito: {problema.deposito.nome}"]
     r = solucao
     linhas.append(

@@ -1,9 +1,3 @@
-"""Servico de alto nivel para gerar textos a partir de uma solucao de rotas.
-
-Usa a LLM (OpenAI) quando ha chave configurada. Caso contrario, gera um texto
-determinístico baseado em template (fallback offline), garantindo que a
-demonstracao e os testes funcionem sem depender de rede/chave.
-"""
 from __future__ import annotations
 
 from ..dominio import ProblemaRoteamento, Rota, Solucao
@@ -15,7 +9,6 @@ from .contexto import solucao_para_texto
 class ServicoLLM:
     def __init__(self, cliente: ClienteLLM | None = None) -> None:
         self.cliente = cliente or ClienteLLM()
-        # Guarda a ultima falha de chamada a LLM (util para a interface exibir).
         self.ultimo_erro: str | None = None
 
     @property
@@ -24,17 +17,12 @@ class ServicoLLM:
 
     def _chamar(self, system: str, user: str, fallback: str,
                 max_tokens: int = 900) -> str:
-        """Tenta a LLM; em caso de indisponibilidade ou erro, usa o fallback.
-
-        Nunca levanta excecao: assim a interface continua funcional mesmo com
-        problemas de cota, rede ou autenticacao na API da OpenAI.
-        """
         self.ultimo_erro = None
         if not self.cliente.disponivel:
             return fallback
         try:
             return self.cliente.chat(system, user, max_tokens=max_tokens)
-        except Exception as exc:  # noqa: BLE001 - degrada para o gerador local
+        except Exception as exc:
             self.ultimo_erro = _mensagem_erro(exc)
             aviso = (
                 f"> **Aviso:** nao foi possivel usar a LLM ({self.ultimo_erro}). "
@@ -79,7 +67,6 @@ class ServicoLLM:
 
 
 def _mensagem_erro(exc: Exception) -> str:
-    """Converte excecoes da LLM (OpenAI/Gemini) em mensagens curtas e amigaveis."""
     nome = type(exc).__name__
     texto = str(exc)
     if ("RateLimit" in nome or "insufficient_quota" in texto
@@ -93,9 +80,6 @@ def _mensagem_erro(exc: Exception) -> str:
     return f"{nome}"
 
 
-# ---------------------------------------------------------------------- #
-# Helpers
-# ---------------------------------------------------------------------- #
 def _rota_para_texto(rota: Rota, problema: ProblemaRoteamento) -> str:
     linhas = [
         f"Deposito: {problema.deposito.nome}",
@@ -115,7 +99,6 @@ def _rota_para_texto(rota: Rota, problema: ProblemaRoteamento) -> str:
     return "\n".join(linhas)
 
 
-# --- Fallbacks offline (sem LLM) --------------------------------------- #
 def _instrucoes_fallback(rota: Rota, problema: ProblemaRoteamento) -> str:
     linhas = [
         f"INSTRUCOES DE ENTREGA - {rota.veiculo.nome}",

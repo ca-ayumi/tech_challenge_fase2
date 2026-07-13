@@ -1,10 +1,3 @@
-"""Operadores geneticos especializados para representacao por permutacao (VRP).
-
-- Selecao por torneio;
-- Crossover de ordem (Order Crossover - OX), que preserva a validade da
-  permutacao (nenhuma entrega duplicada ou faltante);
-- Mutacoes de troca, insercao e inversao (esta ultima com efeito de 2-opt).
-"""
 from __future__ import annotations
 
 import random
@@ -12,7 +5,6 @@ import random
 
 def populacao_inicial(n_entregas: int, tamanho: int,
                       rng: random.Random) -> list[list[int]]:
-    """Gera uma populacao inicial de permutacoes aleatorias."""
     base = list(range(n_entregas))
     populacao = []
     for _ in range(tamanho):
@@ -24,7 +16,6 @@ def populacao_inicial(n_entregas: int, tamanho: int,
 
 def selecao_torneio(populacao: list[list[int]], custos: list[float],
                     k: int, rng: random.Random) -> list[int]:
-    """Seleciona um individuo pelo torneio de tamanho `k` (menor custo vence)."""
     competidores = rng.sample(range(len(populacao)), k=min(k, len(populacao)))
     melhor = min(competidores, key=lambda idx: custos[idx])
     return populacao[melhor][:]
@@ -32,7 +23,6 @@ def selecao_torneio(populacao: list[list[int]], custos: list[float],
 
 def crossover_ox(pai1: list[int], pai2: list[int],
                  rng: random.Random) -> tuple[list[int], list[int]]:
-    """Order Crossover (OX). Retorna dois filhos validos."""
     n = len(pai1)
     if n < 2:
         return pai1[:], pai2[:]
@@ -54,7 +44,6 @@ def crossover_ox(pai1: list[int], pai2: list[int],
 
 
 def mutacao_troca(individuo: list[int], rng: random.Random) -> None:
-    """Troca duas posicoes de lugar (swap)."""
     if len(individuo) < 2:
         return
     i, j = rng.sample(range(len(individuo)), 2)
@@ -62,7 +51,6 @@ def mutacao_troca(individuo: list[int], rng: random.Random) -> None:
 
 
 def mutacao_insercao(individuo: list[int], rng: random.Random) -> None:
-    """Remove um gene de uma posicao e o reinsere em outra."""
     if len(individuo) < 2:
         return
     i = rng.randrange(len(individuo))
@@ -72,7 +60,6 @@ def mutacao_insercao(individuo: list[int], rng: random.Random) -> None:
 
 
 def mutacao_inversao(individuo: list[int], rng: random.Random) -> None:
-    """Inverte um segmento (efeito de 2-opt, bom para desfazer cruzamentos)."""
     if len(individuo) < 2:
         return
     i, j = sorted(rng.sample(range(len(individuo)), 2))
@@ -80,6 +67,5 @@ def mutacao_inversao(individuo: list[int], rng: random.Random) -> None:
 
 
 def mutar(individuo: list[int], rng: random.Random) -> None:
-    """Aplica uma das mutacoes disponiveis, escolhida aleatoriamente."""
     operador = rng.choice((mutacao_troca, mutacao_insercao, mutacao_inversao))
     operador(individuo, rng)

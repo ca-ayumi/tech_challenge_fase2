@@ -1,9 +1,3 @@
-"""Prompts (system + templates) para os diferentes usos da LLM.
-
-Os prompts sao escritos para serem objetivos e extrair informacao acionavel,
-sempre com o cuidado adicional exigido pelo contexto de saude (medicamentos
-criticos, cadeia de frio, conferencia de itens, etc.).
-"""
 from __future__ import annotations
 
 SYSTEM_LOGISTICA = (

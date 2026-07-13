@@ -1,10 +1,3 @@
-"""Geracao de dados sinteticos realistas para o problema de roteamento medico.
-
-As coordenadas base ficam ao redor da regiao metropolitana de Sao Paulo, para
-que a visualizacao no mapa seja coerente. O deposito representa o Hospital
-Universitario central e as entregas representam unidades de saude, farmacias e
-atendimentos domiciliares.
-"""
 from __future__ import annotations
 
 import random
@@ -18,7 +11,6 @@ from .dominio import (
 )
 from .utils import matriz_distancias
 
-# Hospital Universitario central (aprox. regiao da USP / Butanta - Sao Paulo)
 DEPOSITO_PADRAO = Deposito(
     id=0,
     nome="Hospital Universitario Central",
@@ -26,7 +18,6 @@ DEPOSITO_PADRAO = Deposito(
     lon=-46.7313,
 )
 
-# Bairros/regioes de Sao Paulo para nomear as unidades de forma realista.
 _REGIOES = [
     "Pinheiros", "Vila Madalena", "Butanta", "Lapa", "Perdizes", "Barra Funda",
     "Santa Cecilia", "Consolacao", "Bela Vista", "Liberdade", "Ipiranga",
@@ -61,10 +52,8 @@ def gerar_entregas(
     centro: tuple[float, float] = (DEPOSITO_PADRAO.lat, DEPOSITO_PADRAO.lon),
     raio_graus: float = 0.11,
 ) -> list[Entrega]:
-    """Gera `n` entregas dispersas ao redor do centro informado."""
     rng = random.Random(seed)
     regioes = rng.sample(_REGIOES, k=min(n, len(_REGIOES)))
-    # Se pedirem mais entregas que regioes, reutiliza nomes com sufixo.
     while len(regioes) < n:
         base = rng.choice(_REGIOES)
         regioes.append(f"{base} {rng.randint(2, 9)}")
@@ -76,7 +65,6 @@ def gerar_entregas(
             weights=[1.5, 1.0, 2.0, 1.5, 3.0, 2.5, 1.5],
             k=1,
         )[0]
-        # Dispersao gaussiana ao redor do centro (mais realista que uniforme).
         lat = centro[0] + rng.gauss(0, raio_graus / 2)
         lon = centro[1] + rng.gauss(0, raio_graus / 2)
         demanda = round(rng.uniform(*faixa_kg), 1)
@@ -96,8 +84,7 @@ def gerar_entregas(
 
 
 def gerar_frota(n: int, *, seed: int | None = 42) -> list[Veiculo]:
-    """Gera uma frota heterogenea de `n` veiculos."""
-    rng = random.Random((seed or 0) + 999)
+    _ = seed
     frota: list[Veiculo] = []
     for i in range(n):
         nome_base, cap, aut, vel, custo = _MODELOS_VEICULO[i % len(_MODELOS_VEICULO)]
@@ -111,7 +98,6 @@ def gerar_frota(n: int, *, seed: int | None = 42) -> list[Veiculo]:
                 custo_por_km=custo,
             )
         )
-    _ = rng  # reservado para futura variacao aleatoria de frota
     return frota
 
 
@@ -122,7 +108,6 @@ def gerar_problema(
     seed: int | None = 42,
     deposito: Deposito | None = None,
 ) -> ProblemaRoteamento:
-    """Cria uma instancia completa e pronta do problema de roteamento."""
     deposito = deposito or DEPOSITO_PADRAO
     entregas = gerar_entregas(n_entregas, seed=seed, centro=deposito.coordenada)
     veiculos = gerar_frota(n_veiculos, seed=seed)

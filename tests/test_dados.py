@@ -26,6 +26,5 @@ def test_gerar_problema_matriz():
     p = gerar_problema(8, 2, seed=3)
     assert p.n_entregas == 8
     assert p.n_veiculos == 2
-    # matriz inclui o deposito (n+1 x n+1)
     assert len(p.matriz) == 9
     assert len(p.matriz[0]) == 9

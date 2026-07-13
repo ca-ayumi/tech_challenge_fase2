@@ -18,7 +18,6 @@ def test_ag_competitivo_com_vizinho_mais_proximo():
     cfg = ConfigGenetico(tamanho_populacao=80, n_geracoes=200, seed=42)
     resultado = AlgoritmoGenetico(p, cfg).executar()
     vmp = vizinho_mais_proximo(p)
-    # O AG nao deve ser pior que a heuristica gulosa.
     assert resultado.melhor_custo <= vmp.custo_fitness + 1e-6
 
 
@@ -35,7 +34,6 @@ def test_historico_registrado():
     cfg = ConfigGenetico(tamanho_populacao=30, n_geracoes=50, seed=2, paciencia=1000)
     r = AlgoritmoGenetico(p, cfg).executar()
     assert len(r.historico_melhor) == r.geracoes_executadas
-    # O melhor custo deve ser nao-crescente ao longo das geracoes.
     assert all(
         r.historico_melhor[i] >= r.historico_melhor[i + 1]
         for i in range(len(r.historico_melhor) - 1)

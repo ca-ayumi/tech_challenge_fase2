@@ -1,4 +1,3 @@
-# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -6,30 +5,24 @@ __pycache__/
 build/
 dist/
 
-# Ambientes virtuais
 .venv/
 venv/
 env/
 .python-version
 
-# Poetry
 poetry.lock
 
-# Variaveis de ambiente / segredos
 .env
 *.env
 !.env.example
 
-# Testes / cobertura
 .pytest_cache/
 .coverage
 htmlcov/
 coverage.xml
 
-# Streamlit
 .streamlit/secrets.toml
 
-# Terraform
 infra/.terraform/
 infra/*.tfstate
 infra/*.tfstate.*
@@ -37,12 +30,10 @@ infra/.terraform.lock.hcl
 *.tfvars
 !*.tfvars.example
 
-# IDE / SO
 .idea/
 .vscode/
 .DS_Store
 
-# Artefatos gerados
 outputs/
 *.html
 !templates/*.html

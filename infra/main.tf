@@ -1,13 +1,7 @@
-# Infraestrutura como codigo (IaC) para publicar o app Streamlit na AWS
-# usando Amazon ECR (registro da imagem) + AWS App Runner (execucao do container).
-
 locals {
   nome = var.nome_projeto
 }
 
-# ----------------------------------------------------------------------------
-# Repositorio de imagens (ECR)
-# ----------------------------------------------------------------------------
 resource "aws_ecr_repository" "app" {
   name                 = local.nome
   image_tag_mutability = "MUTABLE"
@@ -18,9 +12,6 @@ resource "aws_ecr_repository" "app" {
   }
 }
 
-# ----------------------------------------------------------------------------
-# Role que permite ao App Runner puxar a imagem do ECR
-# ----------------------------------------------------------------------------
 data "aws_iam_policy_document" "apprunner_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -41,9 +32,6 @@ resource "aws_iam_role_policy_attachment" "apprunner_ecr" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSAppRunnerServicePolicyForECRAccess"
 }
 
-# ----------------------------------------------------------------------------
-# Servico App Runner
-# ----------------------------------------------------------------------------
 resource "aws_apprunner_service" "app" {
   service_name = local.nome
 

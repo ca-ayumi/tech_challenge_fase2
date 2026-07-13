@@ -1,10 +1,3 @@
-"""Heuristicas de referencia para comparativo de desempenho com o AG.
-
-Inclui:
-- Vizinho mais proximo (Nearest Neighbor), com desempate por prioridade;
-- Solucao aleatoria (baseline ingenuo);
-- Utilitario de benchmark que compara as abordagens em uma mesma instancia.
-"""
 from __future__ import annotations
 
 import random
@@ -17,21 +10,14 @@ from .fitness import decodificar
 
 
 def permutacao_vizinho_mais_proximo(problema: ProblemaRoteamento) -> list[int]:
-    """Retorna a permutacao construida pela regra do vizinho mais proximo.
-
-    A cada passo escolhe a entrega ainda nao visitada com menor distancia ao
-    ponto atual, ponderada levemente pela prioridade (entregas criticas ganham
-    um desconto de distancia para serem escolhidas antes).
-    """
     matriz = problema.matriz
     nao_visitados = list(range(problema.n_entregas))
     permutacao: list[int] = []
-    no_atual = 0  # deposito
+    no_atual = 0
 
     while nao_visitados:
         def custo(gene: int) -> float:
             entrega = problema.entregas[gene]
-            # Desconto proporcional a urgencia (prioridade critica = maior peso).
             desconto = 1.0 / (1.0 + 0.15 * entrega.prioridade.peso)
             return matriz[no_atual][gene + 1] * desconto
 
@@ -44,12 +30,10 @@ def permutacao_vizinho_mais_proximo(problema: ProblemaRoteamento) -> list[int]:
 
 
 def vizinho_mais_proximo(problema: ProblemaRoteamento) -> Solucao:
-    """Solucao construida pela heuristica do vizinho mais proximo."""
     return decodificar(permutacao_vizinho_mais_proximo(problema), problema)
 
 
 def aleatoria(problema: ProblemaRoteamento, seed: int | None = 0) -> Solucao:
-    """Gera uma solucao a partir de uma permutacao aleatoria (baseline)."""
     rng = random.Random(seed)
     permutacao = list(range(problema.n_entregas))
     rng.shuffle(permutacao)
@@ -83,25 +67,21 @@ def _para_resultado(nome: str, solucao: Solucao, tempo: float) -> ResultadoCompa
 
 def comparar(problema: ProblemaRoteamento,
              cfg: ConfigGenetico | None = None) -> list[ResultadoComparativo]:
-    """Compara AG x Vizinho mais proximo x Aleatorio na mesma instancia."""
     from .genetico import AlgoritmoGenetico
 
     cfg = cfg or ConfigGenetico()
     resultados: list[ResultadoComparativo] = []
 
-    # Aleatoria
     t0 = time.perf_counter()
     sol_rand = aleatoria(problema, seed=cfg.seed)
     resultados.append(_para_resultado("Aleatoria", sol_rand, time.perf_counter() - t0))
 
-    # Vizinho mais proximo
     t0 = time.perf_counter()
     sol_vmp = vizinho_mais_proximo(problema)
     resultados.append(
         _para_resultado("Vizinho mais proximo", sol_vmp, time.perf_counter() - t0)
     )
 
-    # Algoritmo Genetico
     t0 = time.perf_counter()
     ag = AlgoritmoGenetico(problema, cfg)
     res = ag.executar()

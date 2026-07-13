@@ -1,4 +1,3 @@
-"""Utilitarios geometricos e numericos compartilhados."""
 from __future__ import annotations
 
 import math
@@ -8,7 +7,6 @@ RAIO_TERRA_KM = 6371.0088
 
 
 def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Distancia em km entre dois pontos geograficos (formula de Haversine)."""
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
     dphi = math.radians(lat2 - lat1)
     dlambda = math.radians(lon2 - lon1)
@@ -17,10 +15,6 @@ def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
 
 
 def matriz_distancias(coordenadas: list[tuple[float, float]]) -> list[list[float]]:
-    """Constroi a matriz de distancias (km) entre todos os pontos informados.
-
-    O indice 0 e, por convencao, o deposito (hospital central).
-    """
     n = len(coordenadas)
     matriz = [[0.0] * n for _ in range(n)]
     for i in range(n):

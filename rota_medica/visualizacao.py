@@ -1,9 +1,7 @@
-"""Visualizacao das rotas em mapa (folium) e graficos de apoio (plotly)."""
 from __future__ import annotations
 
 from .dominio import Prioridade, ProblemaRoteamento, Solucao
 
-# Paleta de cores para diferenciar as rotas/veiculos no mapa.
 CORES_ROTA = [
     "blue", "green", "purple", "orange", "darkred", "cadetblue",
     "darkgreen", "darkblue", "darkpurple", "black", "pink", "gray",
@@ -18,13 +16,11 @@ CORES_PRIORIDADE = {
 
 
 def criar_mapa(solucao: Solucao, problema: ProblemaRoteamento):
-    """Cria um mapa folium com o deposito e as rotas coloridas por veiculo."""
     import folium
 
     dep = problema.deposito
     mapa = folium.Map(location=[dep.lat, dep.lon], zoom_start=12, control_scale=True)
 
-    # Deposito
     folium.Marker(
         location=[dep.lat, dep.lon],
         tooltip=f"Deposito: {dep.nome}",
@@ -56,12 +52,11 @@ def criar_mapa(solucao: Solucao, problema: ProblemaRoteamento):
                 popup=popup,
                 tooltip=f"{ordem}. {e.nome} ({e.prioridade.rotulo})",
             ).add_to(grupo)
-        pontos.append((dep.lat, dep.lon))  # retorno ao deposito
+        pontos.append((dep.lat, dep.lon))
 
         folium.PolyLine(pontos, color=cor, weight=3, opacity=0.8).add_to(grupo)
         grupo.add_to(mapa)
 
-    # Entregas nao atendidas (marcadas em cinza com X)
     for e in solucao.nao_atendidas:
         folium.Marker(
             location=[e.lat, e.lon],
@@ -74,7 +69,6 @@ def criar_mapa(solucao: Solucao, problema: ProblemaRoteamento):
 
 
 def grafico_convergencia(historico_melhor: list[float], historico_media: list[float]):
-    """Grafico de convergencia do AG (melhor custo x custo medio por geracao)."""
     import plotly.graph_objects as go
 
     geracoes = list(range(1, len(historico_melhor) + 1))
@@ -94,7 +88,6 @@ def grafico_convergencia(historico_melhor: list[float], historico_media: list[fl
 
 
 def grafico_comparativo(resultados) -> "object":
-    """Grafico de barras comparando distancia e custo entre abordagens."""
     import plotly.graph_objects as go
 
     nomes = [r.nome for r in resultados]
@@ -114,7 +107,6 @@ def grafico_comparativo(resultados) -> "object":
 
 
 def grafico_ocupacao(solucao: Solucao):
-    """Grafico de ocupacao (%) de cada veiculo utilizado."""
     import plotly.graph_objects as go
 
     rotas = solucao.rotas_utilizadas

@@ -1,4 +1,3 @@
-"""Testes do servico de LLM no modo offline (sem chave), via fallback local."""
 from rota_medica.dados import gerar_problema
 from rota_medica.llm import ClienteLLM, ServicoLLM
 from rota_medica.llm.contexto import solucao_para_dict, solucao_para_texto
@@ -12,7 +11,6 @@ def _solucao():
 
 
 def _servico_offline():
-    # Forca ausencia de chave para exercitar o fallback determinístico.
     return ServicoLLM(ClienteLLM(api_key=None))
 
 

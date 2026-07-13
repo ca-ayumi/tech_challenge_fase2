@@ -1,4 +1,3 @@
-"""Modelos de dominio do problema de roteamento de veiculos (VRP) medico."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -6,16 +5,10 @@ from enum import IntEnum
 
 
 class Prioridade(IntEnum):
-    """Prioridade de uma entrega.
-
-    O valor numerico e usado como peso na funcao de fitness: quanto menor o
-    valor, mais critica a entrega e maior a penalidade por atende-la tarde.
-    """
-
-    CRITICO = 1  # Medicamentos criticos / emergencia
-    ALTO = 2  # Insumos urgentes
-    NORMAL = 3  # Reposicao regular
-    BAIXO = 4  # Material administrativo / nao urgente
+    CRITICO = 1
+    ALTO = 2
+    NORMAL = 3
+    BAIXO = 4
 
     @property
     def rotulo(self) -> str:
@@ -28,7 +21,6 @@ class Prioridade(IntEnum):
 
     @property
     def peso(self) -> float:
-        """Peso de urgencia (maior = mais urgente) usado na funcao fitness."""
         return {
             Prioridade.CRITICO: 8.0,
             Prioridade.ALTO: 4.0,
@@ -39,8 +31,6 @@ class Prioridade(IntEnum):
 
 @dataclass(frozen=True)
 class Local:
-    """Ponto geografico generico."""
-
     id: int
     nome: str
     lat: float
@@ -53,35 +43,29 @@ class Local:
 
 @dataclass(frozen=True)
 class Deposito(Local):
-    """Hospital central / centro de distribuicao (ponto de partida e retorno)."""
+    pass
 
 
 @dataclass(frozen=True)
 class Entrega(Local):
-    """Uma entrega a ser realizada em uma unidade ou domicilio."""
-
     demanda_kg: float = 0.0
     prioridade: Prioridade = Prioridade.NORMAL
     tempo_servico_min: float = 10.0
-    tipo: str = "Insumo"  # descricao livre (ex.: "Medicamento critico")
+    tipo: str = "Insumo"
 
 
 @dataclass(frozen=True)
 class Veiculo:
-    """Veiculo da frota, com restricoes de capacidade e autonomia."""
-
     id: int
     nome: str
     capacidade_kg: float
     autonomia_km: float
     velocidade_media_kmh: float = 40.0
-    custo_por_km: float = 2.5  # R$/km (combustivel + desgaste)
+    custo_por_km: float = 2.5
 
 
 @dataclass
 class ProblemaRoteamento:
-    """Instancia completa do problema de roteamento."""
-
     deposito: Deposito
     entregas: list[Entrega]
     veiculos: list[Veiculo]
@@ -96,14 +80,11 @@ class ProblemaRoteamento:
         return len(self.veiculos)
 
     def entrega_por_indice(self, idx: int) -> Entrega:
-        """idx e a posicao na lista de entregas (0-based)."""
         return self.entregas[idx]
 
 
 @dataclass
 class Rota:
-    """Rota atribuida a um veiculo: deposito -> entregas -> deposito."""
-
     veiculo: Veiculo
     entregas: list[Entrega] = field(default_factory=list)
     distancia_km: float = 0.0
@@ -116,7 +97,6 @@ class Rota:
 
     @property
     def ocupacao(self) -> float:
-        """Percentual de ocupacao da capacidade do veiculo."""
         if self.veiculo.capacidade_kg <= 0:
             return 0.0
         return self.carga_kg / self.veiculo.capacidade_kg
@@ -128,8 +108,6 @@ class Rota:
 
 @dataclass
 class Solucao:
-    """Solucao completa: conjunto de rotas + entregas nao atendidas + metricas."""
-
     rotas: list[Rota] = field(default_factory=list)
     nao_atendidas: list[Entrega] = field(default_factory=list)
     custo_fitness: float = float("inf")

@@ -1,4 +1,3 @@
-"""Motor do Algoritmo Genetico para o problema de roteamento de veiculos (VRP)."""
 from __future__ import annotations
 
 import random
@@ -14,8 +13,6 @@ from .fitness import avaliar
 
 @dataclass
 class ResultadoOtimizacao:
-    """Resultado completo de uma execucao do AG."""
-
     solucao: Solucao
     melhor_custo: float
     historico_melhor: list[float] = field(default_factory=list)
@@ -26,8 +23,6 @@ class ResultadoOtimizacao:
 
 
 class AlgoritmoGenetico:
-    """Algoritmo Genetico com elitismo, torneio, OX e mutacoes multiplas."""
-
     def __init__(self, problema: ProblemaRoteamento,
                  cfg: ConfigGenetico | None = None) -> None:
         self.problema = problema
@@ -38,11 +33,6 @@ class AlgoritmoGenetico:
         self,
         callback: Callable[[int, float, float], None] | None = None,
     ) -> ResultadoOtimizacao:
-        """Executa a evolucao e retorna o melhor resultado encontrado.
-
-        `callback(geracao, melhor_custo, custo_medio)` e chamado a cada geracao
-        (util para barras de progresso na interface).
-        """
         cfg = self.cfg
         rng = self.rng
         n = self.problema.n_entregas
@@ -55,8 +45,6 @@ class AlgoritmoGenetico:
             )
 
         populacao = ops.populacao_inicial(n, cfg.tamanho_populacao, rng)
-        # GA hibrido: injeta a solucao do vizinho mais proximo como semente,
-        # garantindo que o AG nunca seja pior que essa heuristica gulosa.
         from .heuristicas import permutacao_vizinho_mais_proximo
 
         populacao[0] = permutacao_vizinho_mais_proximo(self.problema)
@@ -115,7 +103,6 @@ class AlgoritmoGenetico:
             if geracoes_sem_melhora >= cfg.paciencia:
                 break
 
-        # Garante que o melhor individuo global esteja refletido na solucao.
         _, melhor_solucao = avaliar(melhor_individuo, self.problema, cfg)
 
         return ResultadoOtimizacao(

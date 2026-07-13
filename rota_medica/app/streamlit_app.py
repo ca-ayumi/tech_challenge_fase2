@@ -1,14 +1,8 @@
-"""App Streamlit: otimizacao de rotas medicas (VRP) com AG e LLM.
-
-Execucao:
-    streamlit run rota_medica/app/streamlit_app.py
-"""
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-# Permite executar via `streamlit run` mesmo sem instalar o pacote.
 _RAIZ = Path(__file__).resolve().parents[2]
 if str(_RAIZ) not in sys.path:
     sys.path.insert(0, str(_RAIZ))
@@ -23,9 +17,6 @@ from rota_medica.otimizacao import AlgoritmoGenetico, ConfigGenetico  # noqa: E4
 from rota_medica.otimizacao.heuristicas import comparar  # noqa: E402
 from rota_medica import visualizacao as viz  # noqa: E402
 
-# Carrega o .env da raiz do projeto de forma explicita (independe do cwd) e
-# sobrescreve valores ja existentes, garantindo que a chave recem-adicionada
-# seja lida mesmo apos alteracoes no arquivo.
 load_dotenv(dotenv_path=_RAIZ / ".env", override=True)
 
 st.set_page_config(

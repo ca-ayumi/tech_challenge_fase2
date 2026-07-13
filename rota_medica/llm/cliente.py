@@ -1,32 +1,22 @@
-"""Cliente de LLM multi-provedor (Google Gemini ou OpenAI), com autodeteccao.
-
-A selecao do provedor segue esta ordem:
-1. Variavel de ambiente ``LLM_PROVIDER`` (``gemini`` ou ``openai``), se definida;
-2. Autodeteccao pela chave disponivel: ``GEMINI_API_KEY`` / ``GOOGLE_API_KEY``
-   -> Gemini; senao ``OPENAI_API_KEY`` -> OpenAI.
-
-Se nenhum provedor estiver configurado, ``disponivel`` retorna ``False`` e o
-servico de alto nivel usa o gerador local (fallback).
-"""
 from __future__ import annotations
 
 import os
 
-try:  # SDK do Google Gemini (opcional)
+try:
     from google import genai as _google_genai
     from google.genai import types as _google_types
-except ImportError:  # pragma: no cover
+except ImportError:
     _google_genai = None
     _google_types = None
 
-try:  # SDK da OpenAI (opcional)
+try:
     from openai import OpenAI as _OpenAI
-except ImportError:  # pragma: no cover
+except ImportError:
     _OpenAI = None
 
 
 class LLMIndisponivel(RuntimeError):
-    """Erro levantado quando a LLM nao pode ser utilizada."""
+    pass
 
 
 def _autodetectar_provedor() -> str:
@@ -38,8 +28,6 @@ def _autodetectar_provedor() -> str:
 
 
 class ClienteLLM:
-    """Encapsula chamadas de chat a Gemini ou OpenAI, configurado por ambiente."""
-
     def __init__(
         self,
         provedor: str | None = None,
@@ -71,7 +59,6 @@ class ClienteLLM:
 
     @property
     def disponivel(self) -> bool:
-        """Indica se a LLM pode ser usada (provedor + SDK + chave)."""
         return bool(self._sdk_ok and self.api_key)
 
     def _obter_client(self):
@@ -99,7 +86,6 @@ class ClienteLLM:
         return self._client
 
     def chat(self, system: str, user: str, max_tokens: int = 900) -> str:
-        """Executa uma chamada de chat e retorna o texto da resposta."""
         client = self._obter_client()
         if self.provedor == "gemini":
             return self._chat_gemini(client, system, user, max_tokens)

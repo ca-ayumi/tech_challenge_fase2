@@ -28,7 +28,6 @@ def test_decodificar_atende_todas_quando_cabe():
 
 
 def test_capacidade_limita_e_forca_mais_veiculos():
-    # Cada entrega tem 10 kg; capacidade 15 kg -> 1 entrega por veiculo.
     p = _problema_pequeno(capacidade=15.0, n_veiculos=3)
     sol = decodificar([0, 1, 2], p)
     assert sol.n_veiculos_usados == 3
@@ -38,13 +37,12 @@ def test_capacidade_limita_e_forca_mais_veiculos():
 def test_falta_de_veiculos_gera_nao_atendidas():
     p = _problema_pequeno(capacidade=15.0, n_veiculos=1)
     sol = decodificar([0, 1, 2], p)
-    # So cabe 1 entrega no unico veiculo -> 2 nao atendidas.
     assert len(sol.nao_atendidas) == 2
 
 
 def test_autonomia_inviabiliza_entrega_muito_distante():
     dep = Deposito(0, "Dep", -23.55, -46.63)
-    longe = Entrega(1, "Longe", -22.90, -43.17, demanda_kg=1)  # ~360 km
+    longe = Entrega(1, "Longe", -22.90, -43.17, demanda_kg=1)
     p = ProblemaRoteamento(
         dep, [longe], [Veiculo(1, "V1", 100, autonomia_km=50)],
         matriz_distancias([dep.coordenada, longe.coordenada]),
@@ -54,9 +52,6 @@ def test_autonomia_inviabiliza_entrega_muito_distante():
 
 
 def test_prioridade_reduz_custo_quando_critico_vem_antes():
-    # Instancia simetrica: duas entregas equidistantes do deposito, para que
-    # os dois ordenamentos tenham a MESMA distancia total. Assim, isolamos o
-    # efeito da prioridade: atender o item critico primeiro deve custar menos.
     dep = Deposito(0, "Dep", -23.55, -46.63)
     critico = Entrega(1, "Crit", -23.55, -46.60, demanda_kg=5,
                       prioridade=Prioridade.CRITICO)

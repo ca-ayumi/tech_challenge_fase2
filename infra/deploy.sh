@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# Build e push da imagem Docker para o ECR e atualizacao do App Runner.
-# Pre-requisitos: awscli configurado, docker e terraform instalados.
-#
-# Uso:
-#   cd infra && terraform init && terraform apply   # cria ECR + App Runner
-#   ./deploy.sh                                      # builda e envia a imagem
 set -euo pipefail
 
 cd "$(dirname "$0")"
