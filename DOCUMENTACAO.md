@@ -3,16 +3,10 @@
 **Tech Challenge — Fase 2 | FIAP — IA para DEVS**
 
 Sistema que resolve o problema de roteamento de veículos (VRP — uma
-generalização do "caixeiro viajante") para a logística de um hospital
-universitário, usando **Algoritmos Genéticos** para otimizar as rotas e uma
+generalização do "caixeiro viajante") para a logística de um hospital, usando **Algoritmos Genéticos** para otimizar as rotas e uma
 **LLM (OpenAI)** para gerar instruções, relatórios e responder perguntas em
 linguagem natural.
 
-> Este arquivo concentra **toda a parte que não é código** (visão geral,
-> arquitetura, decisões de projeto, instruções de uso, comparativos, roteiro do
-> vídeo e checklist de entrega). Todo o restante do repositório é código.
-
----
 
 ## Sumário
 
@@ -35,7 +29,7 @@ linguagem natural.
 
 ## 1. Visão geral da solução
 
-O hospital universitário precisa distribuir medicamentos e insumos entre suas
+O hospital precisa distribuir medicamentos e insumos entre suas
 unidades e para atendimento domiciliar, com uma frota limitada. O sistema:
 
 - Gera (ou recebe) um conjunto de **entregas** com localização, demanda (kg) e

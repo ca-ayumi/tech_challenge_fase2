@@ -13,7 +13,7 @@ from .utils import matriz_distancias
 
 DEPOSITO_PADRAO = Deposito(
     id=0,
-    nome="Hospital Universitario Central",
+    nome="Hospital Central",
     lat=-23.5595,
     lon=-46.7313,
 )
