@@ -3,7 +3,7 @@ name = "rota-medica"
 version = "1.0.0"
 description = "Otimizacao de rotas de distribuicao de medicamentos e insumos com Algoritmos Geneticos (VRP) e LLM"
 authors = ["FIAP - IA para DEVS - Tech Challenge Fase 2"]
-readme = "DOCUMENTACAO.md"
+readme = "docs/DOCUMENTACAO.md"
 packages = [{ include = "rota_medica" }]
 
 [tool.poetry.dependencies]
